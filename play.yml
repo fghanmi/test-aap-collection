@@ -7,7 +7,7 @@
     - name: Create a new token using username/password
       infra.ah_configuration.ah_token:
         state: present
-        ah_host: https://10.0.203.172/
+        ah_host: https://10.0.203.172/ #get it from vars
         ah_username: "admin"
         ah_password: "password"
         validate_certs: false
