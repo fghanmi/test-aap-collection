@@ -1,16 +1,32 @@
 - hosts: localhost
   vars:
     tas_single_node_base_hostname: myrhtas
-    tas_single_node_oidc_issuers:
-      - issuer: "http://dex-idp:5556/dex"
-        client_id: "http://dex-idp:5556/dex"
-        url: example-app
-        type: email
-
+    tas_single_node_skip_os_install: true  
   tasks:
 
-    - name: Include TAS single node role
+    - name: Create a new token using username/password
+      infra.ah_configuration.ah_token:
+        state: present
+        ah_host: https://10.0.203.172/
+        ah_username: "admin"
+        ah_password: "password"
+        validate_certs: false
+
+    - name: Install redhat.artifact_signer collection from the private AAP
+      ansible.builtin.shell:
+        cmd: |
+          ansible-galaxy collection install redhat.artifact_signer -s https://10.0.203.172/pulp_ansible/galaxy/staging/api/ \
+          --ignore-certs --token {{ ah_token.token }} --force
+      changed_when: false
+
+    - name: Verify redhat.artifact_signer collection is installed
+      ansible.builtin.shell:
+        cmd: |
+          bash -c 'set -o pipefail && ansible-galaxy collection list | grep redhat.artifact_signer'
+      register: collection_check
+      changed_when: false
+      failed_when: collection_check.rc != 0
+
+    - name: Include TAS single node
       ansible.builtin.include_role:
         name: redhat.artifact_signer.tas_single_node
-      vars:
-        ansible_become: true
