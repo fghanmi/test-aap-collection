@@ -1,0 +1,16 @@
+- hosts: localhost
+  vars:
+    tas_single_node_base_hostname: myrhtas
+    tas_single_node_oidc_issuers:
+      - issuer: "http://dex-idp:5556/dex"
+        client_id: "http://dex-idp:5556/dex"
+        url: example-app
+        type: email
+
+  tasks:
+
+    - name: Include TAS single node role
+      ansible.builtin.include_role:
+        name: redhat.artifact_signer.tas_single_node
+      vars:
+        ansible_become: true
