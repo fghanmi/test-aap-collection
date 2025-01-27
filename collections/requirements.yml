@@ -1,4 +1,4 @@
 collections:
   - infra.aap_utilities
-  # - infra.ah_configuration
+  - infra.ah_configuration
   - infra.aap_configuration
