@@ -30,6 +30,17 @@
       changed_when: false
       failed_when: collection_check.rc != 0
 
+    - name: List roles in the redhat.artifact_signer collection
+      delegate_to: localhost
+      ansible.builtin.shell:
+        cmd: ls ~/.ansible/collections/ansible_collections/redhat/artifact_signer/roles
+      register: roles_list
+      changed_when: false
+
+    - name: Display roles in the redhat.artifact_signer collection
+      ansible.builtin.debug:
+        msg: "{{ roles_list.stdout_lines }}"
+
     - name: Apply redhat.artifact_signer.tas_single_node role from the private AAP
       ansible.builtin.include_role:
         name: redhat.artifact_signer.tas_single_node
