@@ -32,6 +32,6 @@
 
     - name: Apply redhat.artifact_signer.tas_single_node role from the private AAP
       ansible.builtin.include_role:
-        name: redhat.artifact_signer.tas_single_node
+        name: tas_single_node
       collections:
         - redhat.artifact_signer
