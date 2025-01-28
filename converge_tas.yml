@@ -2,6 +2,8 @@
 - name: Converge
   hosts: molecule
   gather_facts: true
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: "~/.ansible/collections/ansible_collections"
   tasks:
     - name: Error out if registry username is not set
       ansible.builtin.fail:
@@ -21,34 +23,34 @@
           --ignore-certs --token {{ token }} --force -p ~/.ansible/collections/ansible_collections
       changed_when: false
 
-    - name: Verify redhat.artifact_signer collection is installed
-      delegate_to: localhost
-      ansible.builtin.shell:
-        cmd: |
-          bash -c 'set -o pipefail && ansible-galaxy collection list | grep redhat.artifact_signer'
-      register: collection_check
-      changed_when: false
-      failed_when: collection_check.rc != 0
+    # - name: Verify redhat.artifact_signer collection is installed
+    #   delegate_to: localhost
+    #   ansible.builtin.shell:
+    #     cmd: |
+    #       bash -c 'set -o pipefail && ansible-galaxy collection list | grep redhat.artifact_signer'
+    #   register: collection_check
+    #   changed_when: false
+    #   failed_when: collection_check.rc != 0
 
-    - name: List redhat artifact signer collection contents
-      delegate_to: localhost
-      ansible.builtin.shell:
-        cmd: ls -R ~/.ansible/collections/ansible_collections
-      register: signer_collection
-      changed_when: false
-      ignore_errors: true
+    # - name: List redhat artifact signer collection contents
+    #   delegate_to: localhost
+    #   ansible.builtin.shell:
+    #     cmd: ls -R ~/.ansible/collections/ansible_collections
+    #   register: signer_collection
+    #   changed_when: false
+    #   ignore_errors: true
 
-    - name: Display redhat artifact signer collection structure
-      ansible.builtin.debug:
-        msg: "{{ signer_collection.stdout_lines | default(['Not found']) }}"
+    # - name: Display redhat artifact signer collection structure
+    #   ansible.builtin.debug:
+    #     msg: "{{ signer_collection.stdout_lines | default(['Not found']) }}"
 
-    - name: List redhat artifact signer collection contents in /runner/requirements_collections
-      delegate_to: localhost
-      ansible.builtin.shell:
-        cmd: ls -R /runner/requirements_collections/ansible_collections/redhat/artifact_signer
-      register: signer_collection
-      changed_when: false
-      ignore_errors: true
+    # - name: List redhat artifact signer collection contents in /runner/requirements_collections
+    #   delegate_to: localhost
+    #   ansible.builtin.shell:
+    #     cmd: ls -R /runner/requirements_collections/ansible_collections/redhat/artifact_signer
+    #   register: signer_collection
+    #   changed_when: false
+    #   ignore_errors: true
 
     - name: Display contents of redhat artifact signer
       ansible.builtin.debug:
@@ -59,5 +61,3 @@
         name: redhat.artifact_signer.tas_single_node
       collections:
         - redhat.artifact_signer
-      environment:
-        ANSIBLE_COLLECTIONS_PATH: "~/.ansible/collections/ansible_collections"
