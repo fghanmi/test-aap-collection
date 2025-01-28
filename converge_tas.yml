@@ -23,38 +23,12 @@
           --ignore-certs --token {{ token }} --force -p /runner/requirements_collections
       changed_when: false
 
-    # - name: Verify redhat.artifact_signer collection is installed
-    #   delegate_to: localhost
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       bash -c 'set -o pipefail && ansible-galaxy collection list | grep redhat.artifact_signer'
-    #   register: collection_check
-    #   changed_when: false
-    #   failed_when: collection_check.rc != 0
-
-    # - name: List redhat artifact signer collection contents
-    #   delegate_to: localhost
-    #   ansible.builtin.shell:
-    #     cmd: ls -R ~/.ansible/collections/ansible_collections/redhat/artifact_signer
-    #   register: signer_collection
-    #   changed_when: false
-    #   ignore_errors: true
-
-    # - name: Display redhat artifact signer collection structure
-    #   ansible.builtin.debug:
-    #     msg: "{{ signer_collection.stdout_lines | default(['Not found']) }}"
-
-    - name: List redhat artifact signer collection contents in /runner/requirements_collections
+    - name: Verify redhat.artifact_signer collection is installed
       delegate_to: localhost
       ansible.builtin.shell:
         cmd: ls /runner/requirements_collections/ansible_collections/redhat/ | grep artifact_signer
       register: collection_check
       failed_when: collection_check.rc != 0
-      # ignore_errors: true
-
-    # - name: Display contents of redhat artifact signer
-    #   ansible.builtin.debug:
-    #     msg: "{{ signer_collection.stdout_lines | default(['Not found']) }}"
 
     - name: Apply redhat.artifact_signer.tas_single_node role from the private AAP
       ansible.builtin.include_role:
