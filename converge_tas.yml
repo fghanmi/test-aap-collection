@@ -13,17 +13,6 @@
         msg: "Password for registry.redhat.io is not set, please provide it via TAS_SINGLE_NODE_REGISTRY_PASSWORD env variable"
       when: tas_single_node_registry_password == ""
 
-    - name: List roles in the redhat.artifact_signer collection
-      delegate_to: localhost
-      ansible.builtin.shell:
-        cmd: ansible-config dump | grep COLLECTIONS
-      register: roles_list
-      changed_when: false
-
-    - name: Display roles in the redhat.artifact_signer collection
-      ansible.builtin.debug:
-        msg: "{{ roles_list.stdout_lines }}"
-
     - name: Install redhat.artifact_signer collection from the private AAP
       delegate_to: localhost
       ansible.builtin.shell:
@@ -40,6 +29,17 @@
       register: collection_check
       changed_when: false
       failed_when: collection_check.rc != 0
+
+    - name: List redhat artifact signer collection contents
+      delegate_to: localhost
+      ansible.builtin.shell:
+        cmd: ls -R /usr/share/ansible/collections/ansible_collections/redhat/artifact_signer
+      register: signer_collection
+      changed_when: false
+
+    - name: Display redhat artifact signer collection structure
+      ansible.builtin.debug:
+        msg: "{{ signer_collection.stdout_lines }}"
 
     - name: Apply redhat.artifact_signer.tas_single_node role from the private AAP
       ansible.builtin.include_role:
