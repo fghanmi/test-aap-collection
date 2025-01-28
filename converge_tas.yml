@@ -55,6 +55,9 @@
     # - name: Display contents of redhat artifact signer
     #   ansible.builtin.debug:
     #     msg: "{{ signer_collection.stdout_lines | default(['Not found']) }}"
+    - name: Sleep for 30 seconds
+      ansible.builtin.pause:
+        seconds: 30
 
     - name: Apply redhat.artifact_signer.tas_single_node role from the private AAP
       ansible.builtin.include_role:
