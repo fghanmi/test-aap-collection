@@ -24,6 +24,26 @@
       ansible.builtin.debug:
         msg: "{{ roles_list.stdout_lines }}"
 
+    - name: List all collections in defined paths
+      delegate_to: localhost
+      ansible.builtin.shell:
+        cmd: ls -R {{ item }}
+      with_items:
+        - /runner/requirements_collections
+        - /home/runner/.ansible/collections
+        - /usr/share/ansible/collections
+      register: collections_list
+      ignore_errors: true
+      changed_when: false
+
+    - name: Display collections found in each path
+      ansible.builtin.debug:
+        msg: |
+          Path: {{ item.item }}
+          Output:
+          {{ item.stdout_lines | default(['No collections found in this path.']) }}
+      with_items: "{{ collections_list.results }}"
+
     # - name: Install redhat.artifact_signer collection from the private AAP
     #   delegate_to: localhost
     #   ansible.builtin.shell:
