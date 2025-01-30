@@ -7,7 +7,7 @@
     - name: Create a new token using username/password
       infra.ah_configuration.ah_token:
         state: present
-        ah_host: https://10.0.203.172/ #get it from vars
+        ah_host: https://10.0.203.172/
         ah_username: "admin"
         ah_password: "password"
         validate_certs: false
@@ -19,7 +19,7 @@
           --ignore-certs --token {{ ah_token.token }} --force
       changed_when: false
 
-    - name: Verify redhat.artifact_signer collection is installed
+    - name: Verify redhat.artifact_signer collection
       ansible.builtin.shell:
         cmd: |
           bash -c 'set -o pipefail && ansible-galaxy collection list | grep redhat.artifact_signer'
